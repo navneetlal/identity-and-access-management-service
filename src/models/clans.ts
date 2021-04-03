@@ -17,7 +17,7 @@ import Responsibility from './responsibilities';
 interface ClanAttributes {
   id: number;
   name: string;
-  kingdom: string;
+  kingdomId: string;
 }
 
 interface ClanCreationAttributes extends Optional<ClanAttributes, 'id'> {}
@@ -29,7 +29,7 @@ class Clan
 
   public name!: string;
 
-  public kingdom!: string;
+  public kingdomId!: string;
 
   public readonly createdAt!: Date;
 
@@ -68,7 +68,7 @@ class Clan
 Clan.init(
   {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
@@ -76,7 +76,7 @@ Clan.init(
       type: new DataTypes.STRING(128),
       allowNull: false,
     },
-    kingdom: {
+    kingdomId: {
       type: new DataTypes.STRING(128),
       allowNull: false,
     },
@@ -85,6 +85,12 @@ Clan.init(
     tableName: 'clans',
     underscored: true,
     sequelize,
+    indexes: [
+      {
+        name: 'clan_by_kingdom',
+        fields: ['kingdom_id'],
+      },
+    ],
   }
 );
 

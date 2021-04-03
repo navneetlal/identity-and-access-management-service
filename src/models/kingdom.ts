@@ -80,7 +80,7 @@ class Kingdom
 Kingdom.init(
   {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
@@ -102,7 +102,7 @@ Kingdom.init(
       defaultValue: 'RS256',
     },
     jwtExpiresIn: {
-      type: DataTypes.BIGINT.UNSIGNED,
+      type: DataTypes.BIGINT,
       allowNull: false,
       defaultValue: 1800000,
     },

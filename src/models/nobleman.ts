@@ -17,6 +17,7 @@ import Responsibility from './responsibilities';
 interface NoblemanAttributes {
   id: number;
   username: string;
+  password: string;
   fullName: string;
   emailAddress: string | null;
   phoneNumber: number | null;
@@ -44,6 +45,8 @@ class Nobleman
   public id!: number;
 
   public username!: string;
+
+  public password!: string;
 
   public fullName!: string;
 
@@ -114,17 +117,45 @@ class Nobleman
 Nobleman.init(
   {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
     username: {
       type: new DataTypes.STRING(128),
       allowNull: false,
+      unique: true,
+      validate: {
+        len: [5, 12],
+      },
+    },
+    password: {
+      type: new DataTypes.STRING(128),
+      allowNull: false,
     },
     fullName: {
       type: new DataTypes.STRING(128),
       allowNull: false,
+    },
+    phoneNumber: {
+      type: DataTypes.BIGINT,
+      allowNull: true,
+    },
+    emailAddress: {
+      type: new DataTypes.STRING(128),
+      allowNull: true,
+      unique: true,
+      validate: {
+        isEmail: true,
+      },
+    },
+    dateOfBirth: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    gender: {
+      type: new DataTypes.STRING(128),
+      allowNull: true,
     },
     address: {
       type: new DataTypes.STRING(128),
@@ -134,27 +165,23 @@ Nobleman.init(
       type: new DataTypes.STRING(128),
       allowNull: true,
     },
+    state: {
+      type: new DataTypes.STRING(128),
+      allowNull: true,
+    },
     country: {
       type: new DataTypes.STRING(128),
       allowNull: true,
     },
-    dateOfBirth: {
-      type: new DataTypes.DATE(),
+    postalCode: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    organizationName: {
+      type: new DataTypes.STRING(128),
       allowNull: true,
     },
     department: {
-      type: new DataTypes.STRING(128),
-      allowNull: true,
-    },
-    emailAddress: {
-      type: new DataTypes.STRING(128),
-      allowNull: true,
-    },
-    employeeId: {
-      type: new DataTypes.STRING(128),
-      allowNull: true,
-    },
-    gender: {
       type: new DataTypes.STRING(128),
       allowNull: true,
     },
@@ -162,28 +189,16 @@ Nobleman.init(
       type: new DataTypes.STRING(128),
       allowNull: true,
     },
-    organizationName: {
+    employeeId: {
       type: new DataTypes.STRING(128),
-      allowNull: true,
-    },
-    phoneNumber: {
-      type: new DataTypes.BIGINT.UNSIGNED(),
-      allowNull: true,
-    },
-    postalCode: {
-      type: DataTypes.INTEGER.UNSIGNED,
       allowNull: true,
     },
     reportsTo: {
       type: new DataTypes.STRING(128),
       allowNull: true,
     },
-    state: {
-      type: new DataTypes.STRING(128),
-      allowNull: true,
-    },
     kingdomId: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
   },
@@ -191,6 +206,16 @@ Nobleman.init(
     tableName: 'noblemans',
     underscored: true,
     sequelize,
+    indexes: [
+      {
+        unique: true,
+        fields: ['username'],
+      },
+      {
+        name: 'user_by_kingdom',
+        fields: ['kingdom_id'],
+      },
+    ],
   }
 );
 
