@@ -8,10 +8,10 @@ import {
   HasManyCountAssociationsMixin,
   HasManyCreateAssociationMixin,
   Optional,
-} from "sequelize";
+} from 'sequelize';
 
 import sequelize from '../dbContext/postgres';
-import Responsibility from "./responsibilities";
+import Responsibility from './responsibilities';
 
 interface PracticeAttributes {
   id: number;
@@ -21,23 +21,34 @@ interface PracticeAttributes {
   level: string;
 }
 
-interface PracticeCreationAttributes extends Optional<PracticeAttributes, "id"> {}
+interface PracticeCreationAttributes
+  extends Optional<PracticeAttributes, 'id'> {}
 
-class Practice extends Model<PracticeAttributes, PracticeCreationAttributes>
+class Practice
+  extends Model<PracticeAttributes, PracticeCreationAttributes>
   implements PracticeAttributes {
   public id!: number;
+
   public name!: string;
+
   public resource!: string;
+
   public action!: string;
+
   public level!: string;
 
   public readonly createdAt!: Date;
+
   public readonly updatedAt!: Date;
 
   public getResponsibilities!: HasManyGetAssociationsMixin<Responsibility>;
+
   public addResponsibility!: HasManyAddAssociationMixin<Responsibility, number>;
+
   public hasResponsibility!: HasManyHasAssociationMixin<Responsibility, number>;
+
   public countResponsibilities!: HasManyCountAssociationsMixin;
+
   public createResponsibility!: HasManyCreateAssociationMixin<Responsibility>;
 
   public readonly responsibilities?: Responsibility[];
@@ -72,16 +83,16 @@ Practice.init(
     },
   },
   {
-    tableName: "practices",
+    tableName: 'practices',
     underscored: true,
-    sequelize
+    sequelize,
   }
 );
 
 Practice.belongsToMany(Responsibility, {
   through: 'responsibility_practices',
   as: 'responsibilities',
-  foreignKey: 'practice_id'
-})
+  foreignKey: 'practice_id',
+});
 
 export default Practice;

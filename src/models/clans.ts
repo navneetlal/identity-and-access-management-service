@@ -8,11 +8,11 @@ import {
   HasManyCountAssociationsMixin,
   HasManyCreateAssociationMixin,
   Optional,
-} from "sequelize";
+} from 'sequelize';
 
 import sequelize from '../dbContext/postgres';
-import Nobleman from "./nobleman";
-import Responsibility from "./responsibilities";
+import Nobleman from './nobleman';
+import Responsibility from './responsibilities';
 
 interface ClanAttributes {
   id: number;
@@ -20,30 +20,43 @@ interface ClanAttributes {
   kingdom: string;
 }
 
-interface ClanCreationAttributes extends Optional<ClanAttributes, "id"> {}
+interface ClanCreationAttributes extends Optional<ClanAttributes, 'id'> {}
 
-class Clan extends Model<ClanAttributes, ClanCreationAttributes>
+class Clan
+  extends Model<ClanAttributes, ClanCreationAttributes>
   implements ClanAttributes {
   public id!: number;
+
   public name!: string;
+
   public kingdom!: string;
 
   public readonly createdAt!: Date;
+
   public readonly updatedAt!: Date;
 
   public getResponsibilities!: HasManyGetAssociationsMixin<Responsibility>;
+
   public addResponsibility!: HasManyAddAssociationMixin<Responsibility, number>;
+
   public hasResponsibility!: HasManyHasAssociationMixin<Responsibility, number>;
+
   public countResponsibilities!: HasManyCountAssociationsMixin;
+
   public createResponsibility!: HasManyCreateAssociationMixin<Responsibility>;
 
   public getNoblemans!: HasManyGetAssociationsMixin<Nobleman>;
+
   public addNobleman!: HasManyAddAssociationMixin<Nobleman, number>;
+
   public hasNobleman!: HasManyHasAssociationMixin<Nobleman, number>;
+
   public countNoblemans!: HasManyCountAssociationsMixin;
+
   public createNobleman!: HasManyCreateAssociationMixin<Nobleman>;
 
   public readonly responsibilities?: Responsibility[];
+
   public readonly noblemans?: Nobleman[];
 
   public static associations: {
@@ -69,22 +82,22 @@ Clan.init(
     },
   },
   {
-    tableName: "clans",
+    tableName: 'clans',
     underscored: true,
-    sequelize
+    sequelize,
   }
 );
 
 Clan.belongsToMany(Responsibility, {
   through: 'clans_responsibilities',
   as: 'responsibilities',
-  foreignKey: 'clan_id'
-})
+  foreignKey: 'clan_id',
+});
 
 Clan.belongsToMany(Nobleman, {
   through: 'nobleman_clans',
   as: 'noblemans',
-  foreignKey: 'clan_id'
-})
+  foreignKey: 'clan_id',
+});
 
 export default Clan;
