@@ -2,8 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import logger from './logger/logger';
+import sequelize from './dbContext/postgres';
 
 const PORT = process.env.PORT || 3000;
+
+sequelize.sync({
+  force: true,
+  schema: 'public',
+});
 
 const app = express();
 

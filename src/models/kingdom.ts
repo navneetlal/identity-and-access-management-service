@@ -1,3 +1,4 @@
+import { Algorithm } from 'jsonwebtoken';
 import {
   Model,
   DataTypes,
@@ -19,7 +20,7 @@ interface KingdomAttributes {
   name: string;
   jwtPublicKey: string;
   jwtPrivateKey: string;
-  jwtAlgorithm: string;
+  jwtAlgorithm: Algorithm;
   jwtExpiresIn: number;
   jwtIssuer: string;
 }
@@ -37,7 +38,7 @@ class Kingdom
 
   public jwtPrivateKey!: string;
 
-  public jwtAlgorithm: string = 'RS256';
+  public jwtAlgorithm: Algorithm = 'RS256';
 
   public jwtExpiresIn: number = 1800000;
 
@@ -130,4 +131,4 @@ Kingdom.hasMany(Nobleman, {
   sourceKey: 'id',
 });
 
-export default Clan;
+export default Kingdom;

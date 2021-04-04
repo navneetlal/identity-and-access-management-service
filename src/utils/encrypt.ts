@@ -1,25 +1,21 @@
-import crypto from 'crypto';
+import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
 
-const algorithm = 'aes-256-ctr';
-const secretKey = 'vOVH6sdmpNWjRRIqCc7rdxs01lwHzfr3';
+const algorithm = process.env.ENCRYPTION_ALG || 'aes-256-ctr';
+const secretKey =
+  process.env.ENCRYPTION_KEY ||
+  '36Stt8hxv56kijWyya6TZSgW9RcFva4dCKjU39xCCFyL9bWboNbCLACjKZ4s2ULP';
 
 const encrypt = (text: string) => {
-  const iv = crypto.randomBytes(16);
-  const cipher = crypto.createCipheriv(algorithm, secretKey, iv);
-
+  const iv = randomBytes(16);
+  const cipher = createCipheriv(algorithm, secretKey, iv);
   const encrypted = Buffer.concat([cipher.update(text), cipher.final()]);
-
-  // return {
-  //   iv: iv.toString('hex'),
-  //   content: encrypted.toString('hex')
-  // };
   return `${iv.toString('hex')}:${encrypted.toString('hex')}`;
 };
 
 const decrypt = (hash: string) => {
   const [iv, content] = hash.split(':');
   if (typeof iv === 'string' && typeof content === 'string') {
-    const decipher = crypto.createDecipheriv(
+    const decipher = createDecipheriv(
       algorithm,
       secretKey,
       Buffer.from(iv, 'hex')
@@ -30,10 +26,10 @@ const decrypt = (hash: string) => {
     ]);
     return decrypted.toString();
   }
-  return false;
+  throw new TypeError('Expected colon (:) separated hash string');
 };
 
-module.exports = {
+export {
   encrypt,
   decrypt,
 };
